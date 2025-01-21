@@ -56,7 +56,7 @@ fun ImageHeader(
                 .padding(start = 16.dp, end = 16.dp)
         ) {
             Text(
-                text = "Chat Bot",
+                text = "Image and Text",
                 fontWeight = FontWeight.Bold,
                 fontSize = 20.sp,
                 color = textColor,

@@ -54,7 +54,7 @@ fun ChatHeader(navController: NavController) {
                 .padding(start = 16.dp, end = 16.dp)
         ) {
             Text(
-                text = "Image and Text",
+                text = "ChatBot",
                 fontWeight = FontWeight.Bold,
                 fontSize = 20.sp,
                 color = textColor,
