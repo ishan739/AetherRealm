@@ -7,8 +7,10 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.material3.Text
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalContext
 import androidx.navigation.NavController
 import com.example.geminiapp.chatBot.components.ChatFooter
 import com.example.geminiapp.chatBot.components.ChatHeader
@@ -24,6 +26,13 @@ fun ChatBot(
         horizontalAlignment = Alignment.CenterHorizontally,
         modifier = Modifier.fillMaxSize()
     ) {
+        val context = LocalContext.current
+
+        LaunchedEffect(Unit) {
+            viewModel.setContext(context = context )
+            viewModel.fetchMessages()
+        }
+
         //Header
         ChatHeader(navController)
 

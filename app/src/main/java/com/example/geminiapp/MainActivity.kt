@@ -59,11 +59,14 @@ import com.example.geminiapp.chatBot.ChatBot
 import com.example.geminiapp.imageAndText.ImageAndText
 import com.example.geminiapp.textTotext.TextToText
 import com.example.geminiapp.ui.theme.GeminiAppTheme
+import com.google.firebase.Firebase
+import com.google.firebase.initialize
 
 class MainActivity : ComponentActivity() {
     @RequiresApi(Build.VERSION_CODES.P)
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        Firebase.initialize(this)
         setContent {
             GeminiAppTheme {
 

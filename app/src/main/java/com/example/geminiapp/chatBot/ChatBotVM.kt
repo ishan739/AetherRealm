@@ -1,14 +1,22 @@
 package com.example.geminiapp.chatBot
 
+import android.annotation.SuppressLint
+import android.content.Context
+import android.util.Log
+import android.widget.Toast
 import androidx.compose.runtime.mutableStateListOf
+import androidx.compose.ui.platform.LocalContext
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.geminiapp.BuildConfig
 import com.google.ai.client.generativeai.GenerativeModel
 import com.google.ai.client.generativeai.type.content
+import com.google.firebase.firestore.FirebaseFirestore
 import kotlinx.coroutines.launch
 
 class ChatBotVM : ViewModel() {
+
+    private val db = FirebaseFirestore.getInstance()
 
     val list by lazy { mutableStateListOf<ChatData>()}
 
@@ -19,9 +27,18 @@ class ChatBotVM : ViewModel() {
         )
     }
 
+    fun setContext(context: Context) {
+        this.context = context
+    }
+    @SuppressLint("StaticFieldLeak")
+    private  var context: Context? = null
+
+
     fun sendMessage(message: String) = viewModelScope.launch {
 
-        list.add(ChatData(role = ChatRoleEnum.USER.role, message = message))
+        val userMessage = ChatData(role = ChatRoleEnum.USER.role, message = message)
+        list.add(userMessage)
+        saveMessageToFirestore(userMessage)
 
         val chat =  generativeModel.startChat(
             history = listOf(
@@ -44,7 +61,42 @@ class ChatBotVM : ViewModel() {
                 text(message)
             }
         ).text?.let {
-            list.add(ChatData(role = ChatRoleEnum.MODEL.role, message = it))
+            val modelMessage = ChatData(role = ChatRoleEnum.MODEL.role, message = it)
+            list.add(modelMessage)
+            saveMessageToFirestore(modelMessage)
         }
     }
+    private fun saveMessageToFirestore(chatData: ChatData) {
+
+        context?.let {
+            db.collection("chats")
+                .add(chatData)
+                .addOnSuccessListener {
+                    Log.d("Firestore", "Message saved successfully: ${chatData.message}")
+                }
+                .addOnFailureListener {
+                    Log.e("Error", "Error saving message: }", it)
+                }
+        } ?: Log.e("Error", "Context is null")
+    }
+    fun fetchMessages() {
+
+        context?.let {
+            db.collection("chats")
+                .get()
+                .addOnSuccessListener { result ->
+                    list.clear()
+
+                    for (document in result) {
+                        val chat = document.toObject(ChatData::class.java)
+                        list.add(chat)
+                    }
+                }
+                .addOnFailureListener {
+                    Log.d("Firestore", "Error fetching messages", it)
+                }
+        }
+
+    }
+
 }
