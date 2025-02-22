@@ -12,7 +12,18 @@ import com.example.geminiapp.BuildConfig
 import com.google.ai.client.generativeai.GenerativeModel
 import com.google.ai.client.generativeai.type.content
 import com.google.firebase.firestore.FirebaseFirestore
+import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.launch
+
+
+sealed class ChatState(){
+    object Loading : ChatState()
+    object Error : ChatState()
+    object Success : ChatState()
+
+}
+
 
 class ChatBotVM : ViewModel() {
 
@@ -26,6 +37,9 @@ class ChatBotVM : ViewModel() {
             apiKey = BuildConfig.apiKey
         )
     }
+
+    private val _chatState = MutableStateFlow<ChatState>(ChatState.Loading)
+    val chatState: StateFlow<ChatState> = _chatState
 
     fun setContext(context: Context) {
         this.context = context
@@ -72,31 +86,43 @@ class ChatBotVM : ViewModel() {
             db.collection("chats")
                 .add(chatData)
                 .addOnSuccessListener {
-                    Log.d("Firestore", "Message saved successfully: ${chatData.message}")
+                    Log.d("Firestore", "Message saved successfully ")
                 }
                 .addOnFailureListener {
-                    Log.e("Error", "Error saving message: }", it)
+                    Log.e("Error", "Error saving message ", it)
                 }
         } ?: Log.e("Error", "Context is null")
     }
     fun fetchMessages() {
 
-        context?.let {
-            db.collection("chats")
-                .get()
-                .addOnSuccessListener { result ->
-                    list.clear()
+        viewModelScope.launch {
+            _chatState.value = ChatState.Loading
 
-                    for (document in result) {
-                        val chat = document.toObject(ChatData::class.java)
-                        list.add(chat)
-                    }
+            try {
+                context?.let {
+                    db.collection("chats")
+                        .get()
+                        .addOnSuccessListener { result ->
+                            list.clear()
+
+                            for (document in result) {
+                                val chat = document.toObject(ChatData::class.java)
+                                list.add(chat)
+                            }
+                            _chatState.value = ChatState.Success
+                        }
+                        .addOnFailureListener {
+                            Log.d("Firestore", "Error fetching messages", it)
+                            _chatState.value = ChatState.Error
+                        }
                 }
-                .addOnFailureListener {
-                    Log.d("Firestore", "Error fetching messages", it)
-                }
+
+            } catch (
+                e: Exception
+            ) {
+                Log.d("Firestore", "Error fetching messages", e)
+                _chatState.value = ChatState.Error
+            }
         }
-
     }
-
 }

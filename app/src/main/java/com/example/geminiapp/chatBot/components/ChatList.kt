@@ -12,6 +12,7 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
@@ -69,11 +70,11 @@ fun ModelChatMessage(message: String) {
             text = message,
             modifier = Modifier
                 .background(
-                    MaterialTheme.colorScheme.surfaceVariant,
+                    MaterialTheme.colorScheme.outline,
                     shape = RoundedCornerShape(12.dp, 12.dp, 12.dp, 0.dp)
                 )
                 .padding(horizontal = 12.dp, vertical = 8.dp),
-            color = MaterialTheme.colorScheme.onSurfaceVariant,
+            color = Color.Black,
             fontSize = 14.sp,
             fontWeight = FontWeight.Normal
         )
