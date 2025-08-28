@@ -25,7 +25,7 @@ To run this project locally, follow the steps below:
 
 1. Clone the repository:
    ```bash
-   git clone https://github.com/yourusername/aether-realm.git
+   git clone https://github.com/ishan739/aether-realm.git
 
 2. Install dependencies:
    - Android Studio (with Kotlin support)
