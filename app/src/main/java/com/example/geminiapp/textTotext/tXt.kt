@@ -1,8 +1,9 @@
 package com.example.geminiapp.textTotext
 
+import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.example.geminiapp.BuildConfig
+import com.example.geminiapp.Constants
 import com.google.ai.client.generativeai.GenerativeModel
 import com.google.ai.client.generativeai.type.content
 import kotlinx.coroutines.Dispatchers
@@ -12,14 +13,18 @@ import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
 
 class tXt : ViewModel() {
+
+
+
     private val _uiState: MutableStateFlow<UiState> =
         MutableStateFlow(UiState.Initial)
     val uiState: StateFlow<UiState> =
         _uiState.asStateFlow()
 
+
     private val generativeModel = GenerativeModel(
-        modelName = "gemini-pro",
-        apiKey = BuildConfig.apiKey
+        modelName = "gemini-1.5-flash",
+        apiKey = Constants.API_KEY
     )
 
     fun sendPrompt(

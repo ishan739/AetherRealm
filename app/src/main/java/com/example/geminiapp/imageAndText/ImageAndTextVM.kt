@@ -3,7 +3,6 @@ package com.example.geminiapp.imageAndText
 import android.annotation.SuppressLint
 import android.graphics.Bitmap
 import androidx.compose.runtime.mutableStateListOf
-import com.example.geminiapp.BuildConfig
 import com.google.ai.client.generativeai.GenerativeModel
 import com.google.ai.client.generativeai.type.content
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -11,6 +10,7 @@ import kotlinx.coroutines.flow.update
 import androidx.lifecycle.viewModelScope
 import kotlinx.coroutines.launch
 import androidx.lifecycle.ViewModel
+import com.example.geminiapp.Constants
 
 
 class ImageAndTextVM : ViewModel( ){
@@ -21,8 +21,8 @@ class ImageAndTextVM : ViewModel( ){
     val imageList by lazy { mutableStateListOf<Bitmap>() }
 
     private val generativeModel = GenerativeModel(
-        modelName = "gemini-1.5-pro",
-        apiKey = BuildConfig.apiKey
+        modelName = "gemini-1.5-flash",
+        apiKey = Constants.API_KEY
     )
 
     @SuppressLint("SuspiciousIndentation")

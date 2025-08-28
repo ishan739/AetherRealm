@@ -110,11 +110,11 @@ fun Header(navController: NavController) {
                         verticalAlignment = Alignment.CenterVertically
                     ) {
                         Image(
-                            painter = painterResource(id = R.drawable.icon2), // Your image
+                            painter = painterResource(id = R.drawable.icon2),
                             contentDescription = "Logo",
                             modifier = Modifier
                                 .size(40.dp)
-                                .padding(end = 8.dp), // Adjust size and padding as needed
+                                .padding(end = 8.dp),
                             contentScale = ContentScale.Crop
                         )
                         Text(
@@ -143,7 +143,7 @@ fun Header(navController: NavController) {
                     contentScale = ContentScale.Crop
                 )
 
-                // Content Area
+
                 Column(
                     modifier = Modifier
                         .fillMaxSize()

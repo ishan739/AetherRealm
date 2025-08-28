@@ -56,10 +56,3 @@ private fun SuccessImageBody(modifier: Modifier, text: String){
 private fun ErrorImageBody(modifier: Modifier, error: String){
     Text(error)
 }
-
-
-@Preview
-@Composable
-fun ImageTextBodyPreview(){
-    SuccessImageBody(modifier = Modifier, "Body")
-}

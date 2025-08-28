@@ -49,7 +49,7 @@ fun ImageHeader(
             )
         }
 
-        // Centered Title
+
         Box(
             modifier = Modifier
                 .fillMaxWidth()

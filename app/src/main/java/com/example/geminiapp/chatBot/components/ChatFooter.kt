@@ -40,21 +40,21 @@ fun ChatFooter(
     var prompt by rememberSaveable { mutableStateOf(placeholderPrompt) }
     val colors = if (isSystemInDarkTheme()) {
         TextFieldDefaults.colors(
-            unfocusedContainerColor = Color(0xFF121212), // Dark background for unfocused state
-            focusedContainerColor = Color(0xFF1F1F1F),  // Dark background for focused state
+            unfocusedContainerColor = Color(0xFF121212),
+            focusedContainerColor = Color(0xFF1F1F1F),
             focusedIndicatorColor = Color.Transparent,
             unfocusedIndicatorColor = Color.Transparent,
-            focusedLabelColor = Color(0xFFBB86FC),      // Purple for focused label
-            focusedTextColor = Color.White             // White text in dark mode
+            focusedLabelColor = Color(0xFFBB86FC),
+            focusedTextColor = Color.White
         )
     } else {
         TextFieldDefaults.colors(
-            unfocusedContainerColor = Color(0xFFF5F5F5), // Light background for unfocused state
-            focusedContainerColor = Color.White,         // Light background for focused state
+            unfocusedContainerColor = Color(0xFFF5F5F5),
+            focusedContainerColor = Color.White,
             focusedIndicatorColor = Color.Transparent,
             unfocusedIndicatorColor = Color.Transparent,
-            focusedLabelColor = Color(0xFF6200EE),       // Purple for focused label
-            focusedTextColor = Color.Black              // Black text in light mode
+            focusedLabelColor = Color(0xFF6200EE),
+            focusedTextColor = Color.Black
         )
     }
 

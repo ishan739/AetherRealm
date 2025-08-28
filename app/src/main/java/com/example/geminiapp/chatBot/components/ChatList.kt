@@ -7,10 +7,13 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.LazyListState
+import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.font.FontWeight
@@ -20,9 +23,19 @@ import com.example.geminiapp.chatBot.ChatData
 
 @Composable
 fun ChatList(
-    list: MutableList<ChatData>
+    list: MutableList<ChatData>,
+    listState: LazyListState = rememberLazyListState()
 ) {
+//    val
+
+    LaunchedEffect(list.size) {
+        if (list.isNotEmpty()) {
+            listState.animateScrollToItem(list.lastIndex)
+        }
+    }
+
     LazyColumn(
+        state = listState,
         modifier = Modifier.fillMaxSize()
     ) {
         items(list.size) { index ->
@@ -34,6 +47,7 @@ fun ChatList(
         }
     }
 }
+
 
 @Composable
 fun UserChatMessage(message: String) {

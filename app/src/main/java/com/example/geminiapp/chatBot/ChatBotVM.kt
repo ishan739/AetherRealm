@@ -1,15 +1,15 @@
 package com.example.geminiapp.chatBot
 
+import com.google.ai.client.generativeai.GenerativeModel
+
+
 import android.annotation.SuppressLint
 import android.content.Context
 import android.util.Log
-import android.widget.Toast
 import androidx.compose.runtime.mutableStateListOf
-import androidx.compose.ui.platform.LocalContext
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.example.geminiapp.BuildConfig
-import com.google.ai.client.generativeai.GenerativeModel
+import com.example.geminiapp.Constants
 import com.google.ai.client.generativeai.type.content
 import com.google.firebase.firestore.FirebaseFirestore
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -33,8 +33,8 @@ class ChatBotVM : ViewModel() {
 
    private val generativeModel by lazy {
         GenerativeModel(
-            modelName = "gemini-pro",
-            apiKey = BuildConfig.apiKey
+            modelName = "gemini-1.5-flash",
+            apiKey = Constants.API_KEY
         )
     }
 
@@ -54,31 +54,29 @@ class ChatBotVM : ViewModel() {
         list.add(userMessage)
         saveMessageToFirestore(userMessage)
 
-        val chat =  generativeModel.startChat(
-            history = listOf(
-                content (role = ChatRoleEnum.USER.role)
-                {
-                    // Add the history you want to the bot to remember , like for example if this
-                    // bot is used in any other app , then things related to that app etc...
-                    text("My name is Ishan , I am a Software Developer")
-                },
-                content (role = ChatRoleEnum.MODEL.role){
-                    // Add the things that you want the bot to focus on..
-                    text("Great. Need any Help with android development?")
-                }
-
+        try {
+            val chat = generativeModel.startChat(
+                history = listOf(
+                    content(role = ChatRoleEnum.USER.role) { text("My name is Ishan, I am a Software Developer") },
+                    content(role = ChatRoleEnum.MODEL.role) { text("Great. Need any Help with android development?") }
+                )
             )
-        )
-        chat.sendMessage(
-            content (role = ChatRoleEnum.USER.role)
-            {
-                text(message)
+
+            val responseText = chat.sendMessage(
+                content(role = ChatRoleEnum.USER.role) { text(message) }
+            ).text
+
+            responseText?.let {
+                val modelMessage = ChatData(role = ChatRoleEnum.MODEL.role, message = it)
+                list.add(modelMessage)
+                saveMessageToFirestore(modelMessage)
             }
-        ).text?.let {
-            val modelMessage = ChatData(role = ChatRoleEnum.MODEL.role, message = it)
-            list.add(modelMessage)
-            saveMessageToFirestore(modelMessage)
+
+        } catch (e: Exception) {
+            Log.e("GeminiError", "API call failed", e)
+            _chatState.value = ChatState.Error
         }
+
     }
     private fun saveMessageToFirestore(chatData: ChatData) {
 
